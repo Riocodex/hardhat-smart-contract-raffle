@@ -101,14 +101,14 @@ contract Raffle is VRFConsumerBaseV2 , KeeperCompatibleInterface{
         //to rap up all the bools and put it in the inherited chainlink function to retur one last statement
         bool upKeepNeeded = (isOpen && timePassed && hasPlayers && hasBalance);
     }
-     function performUpKeep(bytes calldata /*performdata*/) external override{
+     function performUpKeep(bytes memory /*performdata*/) external override{
         (bool upKeepNeeded , ) = checkUpKeep("");
         //if upkeep is not true
         if(!upKeepNeeded) {
             revert Raffle__UpKeepNotNeeded(
                 //this variables are to show the user the cause of the problem..whether there is no money in the smartcontract,or there are no players or the lottery isnt open yet
                 address(this).balance,
-                s_player.length,
+                s_players.length,
                 uint256(s_raffleState)
             );
         }
@@ -153,5 +153,16 @@ contract Raffle is VRFConsumerBaseV2 , KeeperCompatibleInterface{
     function getRecentWinner() public view returns(address){
         return s_recentWinner;
     }
-    function getRaffleState() public
+    function getRaffleState() public pure returns(RaffleState){
+        return s_raffleState;
+    }
+    function getNumberOfPlayers()public view returns(uint256){
+        return s_players.length;
+    }
+    function getLatestTimeStamp() public view returns (uint256){
+        return s_lastTimeStamp;
+    }
+    function getRequestConfirmations()public pure returns (uint256){
+        return REQUEST_CONFIRMATIONS;
+    }
 }
