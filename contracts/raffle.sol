@@ -29,9 +29,9 @@ contract Raffle is VRFConsumerBaseV2{
     constructor(
         address vrfCoordinatorV2,
         uint256 entranceFee ,
-         bytes gasLane,
+         bytes32 gasLane,
          uint64 subscriptionId,
-         uint32 callbackGasLimit,
+         uint32 callbackGasLimit
         ) VRFConsumerBaseV2(vrfCoordinatorV2){
             i_entranceFee = entranceFee;
             i_vrfCoordinator = VRFCoordinatorV2Interface(vrfCoordinatorV2);
@@ -53,11 +53,13 @@ contract Raffle is VRFConsumerBaseV2{
              i_subscriptionId,
              REQUEST_CONFIRMATIONS,
              i_callbackGasLimit,
-             NUM_WORDS,
+             NUM_WORDS
         );
         emit RequestedRaffleWinner(requestId);
      }
-     function fufillRandomWords(uint256 requestId, uint256[] memory randomWords)
+     function fufillRandomWords(
+        uint256, /*requestId */
+        uint256[] memory randomWords)
         internal override
      { 
         uint256 indexOfWinner = randomWords[0] % s_players.length;
