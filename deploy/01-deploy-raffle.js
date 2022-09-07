@@ -1,6 +1,6 @@
 const { network } = require("hardhat")
-const { developmentChains } = require("../helper-hardhat-config")
-
+const { developmentChains , networkConfig } = require("../helper-hardhat-config")
+const{ verify } = require("../helper-hardhat-config");
 const VRF_SUB_FUND_AMOUNT = ethers.utils.parseEther("30");
 
 module.exports = async function ({ getNamedAccounts , deployments}) {
@@ -33,4 +33,11 @@ module.exports = async function ({ getNamedAccounts , deployments}) {
         log:true,
         waitConfirmations: network.config.blockConfirmations || 1,
     })
+
+    if(!developmentChains.includes(network.name) && process.env.ETHERSCAN_API_KEY){
+        log("Verifying...");
+        await verify(raffle.address , args); 
+    }
+    log("-------------------------------");
 }
+module.exports.tags = ["all" , "raffle"];
